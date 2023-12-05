@@ -1,0 +1,9 @@
+Id,FullName,Email,PhoneNumber,PasswordHash
+1e25f6e2-033e-4e1d-b6bd-2d2fd110fa32,John Doe,john.doe@example.com,555-1234,$2a$12$KwePieLl6Hh2EW8V9LZwOuFl0i1TLC7V8cOiSr2ZjB7aC5wO9D3m6
+e74d59f2-4f4c-4a8e-8b3d-3bf2504de1a2,Jane Smith,jane.smith@example.com,555-5678,$2a$12$XZ3uMvQcMk2xnn0VH1HoeO6kDz8lC.kk/QzHk9a0YEpz20QTXdm9e
+3fcb7a77-4c34-4c36-bf0b-25d8db8136a0,Alice Johnson,alice.j@example.com,555-9101,$2a$12$rXV90/7sjnaXvlzsO.n9LeuY2mB.n9As3.GdVIWl7/n7v5oSSlD2G
+46773583-c0bc-4e42-bba1-a5d2429bba1b,amine,user@example.com,0635852256,$2a$11$U/gixrOxwIMwlcC3PQsHBOXhhkfJfukQhkwy7rqasbuA/L4jVe83y
+7f0f0560-8029-4437-bdba-613da400014d,amine,user25@example.com,0635852256,$2a$11$/SVTu2mPtbHB379Y5cZetOuvVgCNDWuX/D.WQTIKdRk9/7ZAVv3XG
+e4c7b54b-b614-4007-9760-7dd1a1ab6b56,Amine Chioukh,amine.chioukh95@gmail.com,+33635811228,$2a$11$JyeJ14KH94Iv5Z2ptoBEOubMa2GpF41gycPtwYW81FNR9WCd9s/vu
+3e767110-967b-48fa-827f-34d968919442,string,user9875@example.com,063518456,$2a$11$GDv3VlK9xz9m1rm3ADCX0ODoHYTFbexrjpMvo2UDoIHdw1w0FB9Lq
+0a153a17-c570-4d08-b5b6-b575ab711825,string,test@test.test,069123654,$2a$11$MC/FhVO17iyq6ijE4CmFTuICPDVpxmOL8wCrxlPTyNwa.R.Nz8vfC
