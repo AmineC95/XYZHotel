@@ -55,7 +55,7 @@
             },
             "Microsoft.AspNetCore.OpenApi": {
               "target": "Package",
-              "version": "[7.0.12, )"
+              "version": "[7.0.14, )"
             },
             "Portable.BouncyCastle": {
               "target": "Package",

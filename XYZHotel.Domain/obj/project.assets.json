@@ -28,7 +28,7 @@
           }
         }
       },
-      "Microsoft.AspNetCore.OpenApi/7.0.12": {
+      "Microsoft.AspNetCore.OpenApi/7.0.14": {
         "type": "package",
         "dependencies": {
           "Microsoft.OpenApi": "1.4.3"
@@ -205,10 +205,10 @@
         "lib/netstandard2.1/CsvHelper.xml"
       ]
     },
-    "Microsoft.AspNetCore.OpenApi/7.0.12": {
-      "sha512": "KWfmBcvglieWin4srGSPiREh8/8+qCJpME9MPbsN2OVOwKkMXKta2K82Xk0BcZrZCk9tftMBO6qYfJgz0goQpg==",
+    "Microsoft.AspNetCore.OpenApi/7.0.14": {
+      "sha512": "GvrqOw9jyBSAUPQqEFmptKGwr7IH4Wvn+iDZKaEeccCmlXiBPRbTzdlqduc+teiMqnK/JJByg4FMwYHkPin1OA==",
       "type": "package",
-      "path": "microsoft.aspnetcore.openapi/7.0.12",
+      "path": "microsoft.aspnetcore.openapi/7.0.14",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -216,7 +216,7 @@
         "THIRD-PARTY-NOTICES.TXT",
         "lib/net7.0/Microsoft.AspNetCore.OpenApi.dll",
         "lib/net7.0/Microsoft.AspNetCore.OpenApi.xml",
-        "microsoft.aspnetcore.openapi.7.0.12.nupkg.sha512",
+        "microsoft.aspnetcore.openapi.7.0.14.nupkg.sha512",
         "microsoft.aspnetcore.openapi.nuspec"
       ]
     },
@@ -575,7 +575,7 @@
     "net7.0": [
       "BCrypt.Net-Next >= 4.0.3",
       "CsvHelper >= 30.0.1",
-      "Microsoft.AspNetCore.OpenApi >= 7.0.12",
+      "Microsoft.AspNetCore.OpenApi >= 7.0.14",
       "Portable.BouncyCastle >= 1.9.0",
       "Swashbuckle.AspNetCore >= 6.5.0"
     ]
@@ -635,7 +635,7 @@
           },
           "Microsoft.AspNetCore.OpenApi": {
             "target": "Package",
-            "version": "[7.0.12, )"
+            "version": "[7.0.14, )"
           },
           "Portable.BouncyCastle": {
             "target": "Package",
