@@ -14,11 +14,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Amine_2.0\\Desktop\\Cours\\M2\\DDD\\Projet\\XYZHotelSolution\\XYZHotel-Front\\XYZHotel-Front.csproj",
+      "projectUniqueName": "C:\\Users\\Amine_2.0\\Desktop\\Cours\\M2\\DDD\\Projet\\XYZHotel\\XYZHotel-Front\\XYZHotel-Front.csproj",
       "projectName": "XYZHotel-Front",
-      "projectPath": "C:\\Users\\Amine_2.0\\Desktop\\Cours\\M2\\DDD\\Projet\\XYZHotelSolution\\XYZHotel-Front\\XYZHotel-Front.csproj",
+      "projectPath": "C:\\Users\\Amine_2.0\\Desktop\\Cours\\M2\\DDD\\Projet\\XYZHotel\\XYZHotel-Front\\XYZHotel-Front.csproj",
       "packagesPath": "C:\\Users\\Amine_2.0\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Amine_2.0\\Desktop\\Cours\\M2\\DDD\\Projet\\XYZHotelSolution\\XYZHotel-Front\\obj\\",
+      "outputPath": "C:\\Users\\Amine_2.0\\Desktop\\Cours\\M2\\DDD\\Projet\\XYZHotel\\XYZHotel-Front\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
