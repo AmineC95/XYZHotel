@@ -29,7 +29,7 @@
       </q-list>
     </q-drawer>
 
-    <q-page-container>
+    <q-page-container class="background-color" >
       <router-view />
     </q-page-container>
   </q-layout>
@@ -49,6 +49,12 @@ const essentialLinks: EssentialLinkProps[] = [
     icon: "home",
     link: "/",
   },
+  {
+    title: "Reservation",
+    caption: "Reservation",
+    icon: "check",
+    link: "#/reservation",
+  },
 ];
 
 const router = useRouter();
@@ -63,3 +69,9 @@ function toggleLeftDrawer() {
   leftDrawerOpen.value = !leftDrawerOpen.value;
 }
 </script>
+
+<style>
+.background-color{
+  background-color: antiquewhite;
+}
+</style>

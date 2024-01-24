@@ -1,2 +1,7 @@
-Id,...(autres en-têtes)
-bb8106e8-610b-45d0-8dac-6b2160e98bc1,...(autres valeurs)
+Id,PhoneNumber,Room,CheckInDate,CheckOutDate,NumberOfNights,Status
+436961c4-0d83-4739-99b1-892050f0bf90,,,,,0,,
+866742e6-eb07-42d9-831b-8d9834b66d70,,,,,0,,
+8600ebfa-1cd7-4fef-9059-0e0beae84ee9,,,,,0,,
+9ec7e9f1-d163-4353-a0ec-5e3714843de8,,,,,0,,
+61c19dcb-deba-4f26-b6ed-f8c2f6c6c1e2,,,,,0,,
+24afd47a-1616-4a88-9f25-e1b2754f1850,0625822113,,07/12/2023 13:34:53,08/12/2023 13:34:53,1,Confirmed,

@@ -14,6 +14,7 @@ namespace XYZHotel.Api.Controllers
     {
         private readonly string _csvFilePath;
 
+
         public ReservationController()
         {
             _csvFilePath = Path.Combine(Directory.GetCurrentDirectory(), "Data", "ReservationDB.csv");
@@ -81,11 +82,9 @@ namespace XYZHotel.Api.Controllers
             foreach (var line in lines.Skip(1))
             {
                 var values = line.Split(',');
-                // Adaptez cette partie en fonction de la structure de votre CSV et des objets Reservation
                 var reservation = new Reservation
                 {
                     Id = new Guid(values[0]),
-                    // Autres attributs de Reservation à définir ici
                 };
                 reservations.Add(reservation);
             }
@@ -95,9 +94,14 @@ namespace XYZHotel.Api.Controllers
 
         private void WriteReservationsToCsv(List<Reservation> reservations)
         {
-            var lines = new List<string> { "Id,...(autres en-têtes)" }; // Adaptez les en-têtes en fonction de votre structure CSV
+            var lines = new List<string> { "Id,PhoneNumber,Room,CheckInDate,CheckOutDate,NumberOfNights,Status" };
             lines.AddRange(reservations.Select(reservation =>
-                $"{reservation.Id},...(autres valeurs)")); // Adaptez la conversion en fonction de votre structure CSV
+                $"{reservation.Id}," +
+                $"{reservation.Customer?.PhoneNumber.Number}," +
+                $"{reservation.Room?.Type},{reservation.CheckInDate}," +
+                $"{reservation.CheckOutDate},{reservation.NumberOfNights}," +
+                $"{reservation.Status},"
+                ));
 
             System.IO.File.WriteAllLines(_csvFilePath, lines);
         }
