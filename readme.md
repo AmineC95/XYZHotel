@@ -1,3 +1,7 @@
+
+![image](https://github.com/AmineC95/XYZHotel/assets/87375880/0863e963-d841-4c94-9d0f-486289624529)
+
+
 ## Ubiquitous Language:
 
 - **Réservation (Booking) :** 
