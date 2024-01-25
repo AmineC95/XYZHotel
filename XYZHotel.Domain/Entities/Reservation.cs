@@ -4,7 +4,7 @@ namespace XYZHotel.Domain.Entities
 {
     public class Reservation
     {
-        public Guid? Id { get; set; }
+        public int? Id { get; set; }
         public Customer? Customer { get; set; }
         public Room? Room { get; set; }
         public DateTime? CheckInDate { get; set; }

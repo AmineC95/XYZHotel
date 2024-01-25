@@ -11,84 +11,81 @@
 
 export interface Balance {
   /** @format double */
-  amount?: number | null;
-  currency?: Currency;
+  Amount?: number | null;
+  Currency?: Currency;
 }
 
-/** @format int32 */
 export enum Currency {
-  Value0 = 0,
-  Value1 = 1,
-  Value2 = 2,
-  Value3 = 3,
-  Value4 = 4,
+  EUR = "EUR",
+  USD = "USD",
+  GBP = "GBP",
+  JPY = "JPY",
+  CHF = "CHF",
 }
 
 export interface Customer {
   /** @format uuid */
-  id?: string | null;
-  fullName?: string | null;
-  email?: Email;
-  phoneNumber?: PhonesNumber;
-  passwordHash?: string | null;
+  Id?: string | null;
+  FullName?: string | null;
+  Email?: Email;
+  PhoneNumber?: PhonesNumber;
+  PasswordHash?: string | null;
 }
 
 export interface Email {
   /** @format email */
-  value?: string | null;
+  Value?: string | null;
 }
 
 export interface LoginRequest {
-  email?: string | null;
-  password?: string | null;
+  Email?: string | null;
+  Password?: string | null;
 }
 
 export interface PhonesNumber {
   /** @format tel */
-  number?: string | null;
+  Number?: string | null;
 }
 
 export interface Reservation {
   /** @format uuid */
-  id?: string | null;
-  customer?: Customer;
-  room?: Room;
+  Id?: string | null;
+  Customer?: Customer;
+  Room?: Room;
   /** @format date-time */
-  checkInDate?: string | null;
+  CheckInDate?: string | null;
   /** @format date-time */
-  checkOutDate?: string | null;
+  CheckOutDate?: string | null;
   /** @format int32 */
-  numberOfNights?: number;
-  status?: ReservationStatus;
+  NumberOfNights?: number;
+  Status?: ReservationStatus;
 }
 
-/** @format int32 */
 export enum ReservationStatus {
-  Value0 = 0,
-  Value1 = 1,
-  Value2 = 2,
+  Pending = "Pending",
+  Confirmed = "Confirmed",
+  Cancelled = "Cancelled",
 }
 
 export interface Room {
   /** @format uuid */
-  id?: string | null;
-  type?: RoomType;
-  pricePerNight?: Balance;
+  Id?: string | null;
+  Type?: RoomType;
+  PricePerNight?: Balance;
 }
 
-/** @format int32 */
 export enum RoomType {
-  Value0 = 0,
-  Value1 = 1,
-  Value2 = 2,
+  Standard = "Standard",
+  Superior = "Superior",
+  Suite = "Suite",
 }
 
 export interface WeatherForecast {
   /** @format date */
-  date?: string;
+  Date?: string;
   /** @format int32 */
-  temperatureC?: number;
+  TemperatureC?: number;
   /** @format int32 */
-  temperatureF?: number;
-  summary?: string | null;
+  TemperatureF?: number;
+  Summary?: string | null;
 }

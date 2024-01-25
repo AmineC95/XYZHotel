@@ -1,10 +1,11 @@
-using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
+using System.Text.Json.Serialization;
+using XYZHotel.Domain.Conf;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(a => a.JsonSerializerOptions.PropertyNamingPolicy = new PascalCasePolicy())
+    .AddJsonOptions(a => a.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
 
 builder.Services.AddCors(options =>
 {

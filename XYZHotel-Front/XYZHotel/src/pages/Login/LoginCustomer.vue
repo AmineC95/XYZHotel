@@ -78,8 +78,8 @@ import {
 import { login, createCustomer } from "../../api/services/api";
 
 const credentials = reactive<LoginRequest>({
-  email: "",
-  password: "",
+  Email: "",
+  Password: "",
 });
 
 const newCustomer = reactive({
@@ -100,10 +100,10 @@ const registerCustomer = async () => {
   );
   try {
     const customerToCreate: Customer = {
-      fullName: newCustomer.fullName,
-      email: { value: newCustomer.email.value },
-      phoneNumber: { number: newCustomer.phoneNumber.number },
-      passwordHash: newCustomer.password,
+      FullName: newCustomer.fullName,
+      Email: { value: newCustomer.email.value },
+      PhoneNumber: { number: newCustomer.phoneNumber.number },
+      PasswordHash: newCustomer.password,
     };
     const response = await createCustomer(customerToCreate);
     console.log(response);
@@ -113,7 +113,7 @@ const registerCustomer = async () => {
 };
 
 const loginCustomer = async () => {
-  console.log(credentials.email, credentials.password);
+  console.log(credentials.Email, credentials.Password);
   try {
     const response = await login(credentials);
     console.log(response);

@@ -1,37 +1,53 @@
-.DS_Store
-.thumbs.db
-node_modules
+# Fichiers génériques à ignorer
+*.log
+*.tmp
+*.temp
+*.swp
+*.swo
+*.bak
+*.cache
+*.idea*
+.vscode/
+node_modules/
+dist/
 
-# Quasar core related directories
-.quasar
-/dist
-/quasar.config.*.temporary.compiled*
-
-# Cordova related directories and files
-/src-cordova/node_modules
-/src-cordova/platforms
-/src-cordova/plugins
-/src-cordova/www
-
-# Capacitor related directories and files
-/src-capacitor/www
-/src-capacitor/node_modules
-
-# BEX related directories and files
-/src-bex/www
-/src-bex/js/core
-
-# Log files
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-
-# Editor directories and files
-.idea
+# Fichiers spécifiques à .NET
+[Bb]in/
+[Oo]bj/
+*.user
+*.userosscache
 *.suo
-*.ntvs*
-*.njsproj
-*.sln
+*.userprefs
+*.pidb
+*.vs/
+*.nupkg
+*ReSharper*
+*resharper*
+*Resharper*
+*.rider*
+_ReSharper.*/
+[Tt]est[Rr]esult*
+*.VisualState.xml
+paket-files/
+*.paket
+*.dotCover
+*.dll    # Ignore DLL files
+*.exe    # Ignore executable files
+*.pdb    # Ignore PDB debug information files
 
-# local .env files
-.env.local*
+# Fichiers spécifiques à Quasar / Vue.js
+/public/
+/src-cordova/
+/src-electron/
+/src-pwa/
+/.quasar/
+/.history/
+
+# Fichiers de configuration spécifiques
+*.DS_Store
+.env
+.env.local
+.env.*.local
+
+# Autres fichiers/dossiers à considérer
+# Ajoutez ici d'autres fichiers ou dossiers spécifiques à votre projet

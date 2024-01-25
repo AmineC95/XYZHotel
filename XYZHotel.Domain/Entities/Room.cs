@@ -5,7 +5,7 @@ namespace XYZHotel.Domain.Entities
 {
     public class Room
     {
-        public Guid? Id { get; set; }
+        public int Id { get; set; }
         public RoomType? Type { get; set; }
         public Balance? PricePerNight { get; set; }
     }

@@ -1,10 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using XYZHotel.Domain.Entities;
 using XYZHotel.Domain.Enums;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+using XYZHotel.Domain.ValueObjects;
 
 namespace XYZHotel.Api.Controllers
 {
@@ -36,7 +33,7 @@ namespace XYZHotel.Api.Controllers
         {
             var reservations = ReadReservationsFromCsv();
 
-            newReservation.Id = Guid.NewGuid();
+            newReservation.Id = new int();
             reservations.Add(newReservation);
             WriteReservationsToCsv(reservations);
 
@@ -44,7 +41,7 @@ namespace XYZHotel.Api.Controllers
         }
 
         [HttpPut("/UpdateReservation/{id}")]
-        public IActionResult UpdateReservation(Guid id, [FromBody] Reservation updatedReservation)
+        public IActionResult UpdateReservation(int id, [FromBody] Reservation updatedReservation)
         {
             var reservations = ReadReservationsFromCsv();
             var reservationIndex = reservations.FindIndex(r => r.Id == id);
@@ -58,7 +55,7 @@ namespace XYZHotel.Api.Controllers
         }
 
         [HttpDelete("/DeleteReservation/{id}")]
-        public IActionResult DeleteReservation(Guid id)
+        public IActionResult DeleteReservation(int id)
         {
             var reservations = ReadReservationsFromCsv();
             var reservation = reservations.FirstOrDefault(r => r.Id == id);
@@ -82,11 +79,19 @@ namespace XYZHotel.Api.Controllers
             foreach (var line in lines.Skip(1))
             {
                 var values = line.Split(',');
-                var reservation = new Reservation
+                if (int.TryParse(values[0], out var id))
                 {
-                    Id = new Guid(values[0]),
-                };
-                reservations.Add(reservation);
+                    var reservation = new Reservation
+                    {
+                        Id = id,
+                        Customer = values[2],
+                        CheckInDate = checkInDate,
+                        CheckOutDate = checkOutDate,
+                        NumberOfNights = numberOfNights,
+                        Status = status
+                    };
+                    reservations.Add(reservation);
+                }
             }
 
             return reservations;
