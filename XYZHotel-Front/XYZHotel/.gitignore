@@ -12,8 +12,8 @@ node_modules/
 dist/
 
 # Fichiers spécifiques à .NET
-[Bb]in/
-[Oo]bj/
+[Bb]in/    # Ignore le dossier bin
+[Oo]bj/    # Ignore le dossier obj
 *.user
 *.userosscache
 *.suo
@@ -34,6 +34,7 @@ paket-files/
 *.dll    # Ignore DLL files
 *.exe    # Ignore executable files
 *.pdb    # Ignore PDB debug information files
+*.cache  # Ignore cache files
 
 # Fichiers spécifiques à Quasar / Vue.js
 /public/
@@ -48,6 +49,3 @@ paket-files/
 .env
 .env.local
 .env.*.local
-
-# Autres fichiers/dossiers à considérer
-# Ajoutez ici d'autres fichiers ou dossiers spécifiques à votre projet
