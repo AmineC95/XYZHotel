@@ -81,10 +81,17 @@ namespace XYZHotel.Api.Controllers
                 var values = line.Split(',');
                 if (int.TryParse(values[0], out var id))
                 {
+                    DateTime.TryParse(values[3], out var checkInDate);
+                    DateTime.TryParse(values[4], out var checkOutDate);
+                    int.TryParse(values[5], out var numberOfNights);
+                    Enum.TryParse(values[6], out ReservationStatus status);
+                    Enum.TryParse(values[2], out RoomType roomType);
+
                     var reservation = new Reservation
                     {
                         Id = id,
-                        Customer = values[2],
+                        Customer = new Customer { PhoneNumber = new PhonesNumber(values[1]) },
+                        Room = new Room { Type = roomType },
                         CheckInDate = checkInDate,
                         CheckOutDate = checkOutDate,
                         NumberOfNights = numberOfNights,

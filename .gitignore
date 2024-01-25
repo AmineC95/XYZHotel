@@ -362,3 +362,9 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+/XYZHotel-Front/obj
+/XYZHotel.Domain/obj
+/XYZHotel.Domain/bin
+/XYZHotel.Domain/bin
+/XYZHotel.Domain/obj
+/XYZHotel-Front/obj
