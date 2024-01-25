@@ -1,6 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Text;
 using XYZHotel.Domain.Entities;
 using XYZHotel.Domain.ValueObjects;
+using static Org.BouncyCastle.Math.EC.ECCurve;
 
 namespace XYZHotel.Domain.Controller
 {
@@ -9,9 +13,11 @@ namespace XYZHotel.Domain.Controller
     public class CustomerController : ControllerBase
     {
         private readonly string _csvFilePath;
+        private readonly IConfiguration _config;
 
-        public CustomerController()
+        public CustomerController(IConfiguration config)
         {
+            _config = config;
             _csvFilePath = Path.Combine(Directory.GetCurrentDirectory(), "Data", "CustomerDB.csv");
         }
 
@@ -128,7 +134,6 @@ namespace XYZHotel.Domain.Controller
         {
             var customers = ReadCustomersFromCsv();
 
-
             var customer = customers.FirstOrDefault(c => c.Email.Value == loginRequest.Email);
             if (customer == null)
             {
@@ -141,7 +146,24 @@ namespace XYZHotel.Domain.Controller
                 return Unauthorized("Invalid credentials.");
             }
 
-            return Ok("Login successful.");
+            // Générer le token JWT
+            var tokenString = GenerateJSONWebToken(customer);
+
+            return Ok(new { token = tokenString });
+        }
+
+        private string GenerateJSONWebToken(Customer customer)
+        {
+            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
+            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+
+            var token = new JwtSecurityToken(_config["Jwt:Issuer"],
+                _config["Jwt:Issuer"],
+                null,
+                expires: DateTime.Now.AddMinutes(120),
+                signingCredentials: credentials);
+
+            return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
 

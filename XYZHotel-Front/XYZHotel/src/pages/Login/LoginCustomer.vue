@@ -69,11 +69,10 @@
 
 <script setup lang="ts">
 import { reactive, ref } from "vue";
+import { useRouter } from "vue-router";
 import {
   LoginRequest,
   Customer,
-  Email,
-  PhonesNumber,
 } from "../../api/models/index";
 import { login, createCustomer } from "../../api/services/api";
 
@@ -90,6 +89,7 @@ const newCustomer = reactive({
 });
 
 const tab = ref("login");
+const router = useRouter();
 
 const registerCustomer = async () => {
   console.log(
@@ -117,6 +117,8 @@ const loginCustomer = async () => {
   try {
     const response = await login(credentials);
     console.log(response);
+    localStorage.setItem('token', response);
+    router.push('/dashboard');
   } catch (error) {
     console.error(error);
   }

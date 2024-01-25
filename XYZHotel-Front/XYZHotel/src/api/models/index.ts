@@ -48,8 +48,8 @@ export interface PhonesNumber {
 }
 
 export interface Reservation {
-  /** @format uuid */
-  Id?: string | null;
+  /** @format int32 */
+  Id?: number | null;
   Customer?: Customer;
   Room?: Room;
   /** @format date-time */
@@ -68,8 +68,8 @@ export enum ReservationStatus {
 }
 
 export interface Room {
-  /** @format uuid */
-  Id?: string | null;
+  /** @format int32 */
+  Id?: number;
   Type?: RoomType;
   PricePerNight?: Balance;
 }
