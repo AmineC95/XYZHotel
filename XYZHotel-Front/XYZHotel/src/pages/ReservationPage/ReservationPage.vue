@@ -18,6 +18,7 @@
             type="email"
             v-model="reservation.customer.email.value"
             required
+
           />
           <q-input
             label="Phone Number"
