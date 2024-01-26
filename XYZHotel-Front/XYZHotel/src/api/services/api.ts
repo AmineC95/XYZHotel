@@ -30,6 +30,7 @@ export const deleteCustomer = async (id: string): Promise<void> => {
 
 export const login = async (loginRequest: LoginRequest): Promise<string> => {
   const response = await api.post<string>("/Login", loginRequest);
+  console.log(response.data);
   return response.data;
 };
 

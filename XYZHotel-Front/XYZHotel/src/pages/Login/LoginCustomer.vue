@@ -15,14 +15,14 @@
             label="Email"
             type="email"
             id="email"
-            v-model="credentials.email"
+            v-model="credentials.Email"
             required
           />
           <q-input
             label="Password"
             type="password"
             id="password"
-            v-model="credentials.password"
+            v-model="credentials.Password"
             required
           />
           <q-btn type="submit">Login</q-btn>

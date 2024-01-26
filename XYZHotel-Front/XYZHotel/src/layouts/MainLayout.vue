@@ -72,6 +72,6 @@ function toggleLeftDrawer() {
 
 <style>
 .background-color{
-  background-color: antiquewhite;
+  background-color: #f3f7fb;
 }
 </style>
