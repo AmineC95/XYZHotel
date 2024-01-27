@@ -117,7 +117,7 @@ const loginCustomer = async () => {
   try {
     const response = await login(credentials);
     console.log(response);
-    localStorage.setItem('token', response);
+    localStorage.setItem('token', response.Token);
     router.push('/dashboard');
   } catch (error) {
     console.error(error);

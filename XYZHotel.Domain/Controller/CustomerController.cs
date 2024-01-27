@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using System.Text;
 using XYZHotel.Domain.Entities;
 using XYZHotel.Domain.ValueObjects;
@@ -53,10 +55,14 @@ namespace XYZHotel.Domain.Controller
         {
             var customers = ReadCustomersFromCsv();
 
-            if (customers.Any(c => c.Email.Value.Equals(newCustomer.Email.Value, StringComparison.OrdinalIgnoreCase)))
+            if (newCustomer.Email?.Value != null)
             {
-                return BadRequest("Email already in use.");
+                if (customers.Any(c => c.Email.Value.Equals(newCustomer.Email.Value, StringComparison.OrdinalIgnoreCase)))
+                {
+                    return BadRequest("Email already in use.");
+                }
             }
+
 
             newCustomer.Id = Guid.NewGuid();
             newCustomer.PasswordHash = BCrypt.Net.BCrypt.HashPassword(newCustomer.PasswordHash);
@@ -146,21 +152,50 @@ namespace XYZHotel.Domain.Controller
                 return Unauthorized("Invalid credentials.");
             }
 
-            // Générer le token JWT
             var tokenString = GenerateJSONWebToken(customer);
 
             return Ok(new { token = tokenString });
         }
 
+        [Authorize]
+        [HttpGet("/GetUserInfo")]
+        public IActionResult GetUserInfo()
+        {
+            var fullname = User.Claims.ToList().FirstOrDefault().Value;
+
+            var emailClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email);
+            var email = emailClaim?.Value;
+
+            var user = new
+            {
+                Fullname = fullname,
+                Email = email
+            };
+
+            return Ok(user);
+        }
+
         private string GenerateJSONWebToken(Customer customer)
         {
-            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
+            var jwtKey = _config["Jwt:Key"];
+            if (jwtKey == null)
+            {
+                throw new ArgumentNullException(nameof(jwtKey));
+            }
+
+            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+
+            var claims = new[]
+            {
+                new Claim(JwtRegisteredClaimNames.Sub, customer.FullName),
+                new Claim(JwtRegisteredClaimNames.Email, customer.Email.Value),
+            };
 
             var token = new JwtSecurityToken(_config["Jwt:Issuer"],
                 _config["Jwt:Issuer"],
-                null,
-                expires: DateTime.Now.AddMinutes(120),
+                claims,
+                expires: DateTime.Now.AddMinutes(30),
                 signingCredentials: credentials);
 
             return new JwtSecurityTokenHandler().WriteToken(token);

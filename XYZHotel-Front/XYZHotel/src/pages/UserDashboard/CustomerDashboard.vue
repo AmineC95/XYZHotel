@@ -20,7 +20,8 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
+import { getUserInfo } from "../../api/services/api";
 
 const user = ref({
   fullname: '',
@@ -32,4 +33,13 @@ const user = ref({
 const updateUserInfo = () => {
 
 };
+
+onMounted(async () => {
+  const response = await getUserInfo();
+  if (response.status === 200) {
+    user.value.fullname = response.data.Fullname;
+    user.value.email = response.data.Email;
+  }
+  console.log(response);
+});
 </script>

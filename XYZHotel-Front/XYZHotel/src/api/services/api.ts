@@ -34,4 +34,14 @@ export const login = async (loginRequest: LoginRequest): Promise<string> => {
   return response.data;
 };
 
+
+export const getUserInfo = async (): Promise<any> => {
+  const response = await api.get<any>("/GetUserInfo", {
+    headers: {
+      'Authorization': `Bearer ${localStorage.getItem('token')}`
+    }
+  });
+  return response.data;
+};
+
 export default api;
