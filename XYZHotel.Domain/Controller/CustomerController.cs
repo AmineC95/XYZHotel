@@ -86,7 +86,7 @@ namespace XYZHotel.Domain.Controller
             customerToUpdate.FullName = updatedCustomer.FullName;
             customerToUpdate.Email = updatedCustomer.Email;
             customerToUpdate.PhoneNumber = updatedCustomer.PhoneNumber;
-            customerToUpdate.PasswordHash = updatedCustomer.PasswordHash;
+            customerToUpdate.PasswordHash = BCrypt.Net.BCrypt.HashPassword(updatedCustomer.PasswordHash);
 
             WriteCustomersToCsv(customers);
             return NoContent();

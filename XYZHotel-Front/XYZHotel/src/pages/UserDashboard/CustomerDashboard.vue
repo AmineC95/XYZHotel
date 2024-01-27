@@ -11,7 +11,8 @@
         <q-form @submit="updateUserInfo">
           <q-input v-model="user.FullName" label="Nom complet" />
           <q-input v-model="user.PhoneNumber.Number" label="Telephone" />
-          <q-input v-model="user.Email" label="Email" />
+          <q-input v-model="user.Email.Value" label="Email" />
+          <q-input v-model="user.PasswordHash" label="Mot de passe" />
           <q-btn label="Mettre à jour" type="submit" color="primary" />
         </q-form>
       </q-card-section>
@@ -24,12 +25,22 @@ import { onMounted, ref } from "vue";
 import { getUserInfo, updateCustomer } from "../../api/services/api";
 import { Customer } from "../../api/models/index";
 
-const user = ref<any>({
+const user = ref<Customer>({
+  Id: "",
   FullName: "",
-  Email: "",
+  Email: { Value: "" },
   PasswordHash: "",
   PhoneNumber: { Number: "" },
 });
+
+const transformUserInfo = (userInfo: any): Customer => ({
+  Id: userInfo.Id,
+  FullName: userInfo.FullName,
+  Email: { Value: userInfo.Email },
+  PasswordHash: "",
+  PhoneNumber: { Number: userInfo.PhoneNumber.Number },
+});
+
 const updateUserInfo = async () => {
   if (!user.value.Id) {
     console.error('User ID is undefined');
@@ -41,7 +52,6 @@ const updateUserInfo = async () => {
 
 onMounted(async () => {
   const response = await getUserInfo();
-  user.value = response;
-  return user.value;
+  user.value = transformUserInfo(response);
 });
 </script>
