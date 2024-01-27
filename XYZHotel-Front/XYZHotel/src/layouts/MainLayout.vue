@@ -12,7 +12,8 @@
         />
         <q-toolbar-title> XYZHotel </q-toolbar-title>
         <div>
-          <q-btn label="Login" color="secondary" @click="goToLoginPage" />
+          <q-btn v-if="isLoggedIn" label="Deconnexion" color="secondary" @click="logout" />
+          <q-btn v-else label="Connexion" color="secondary" @click="goToLoginPage" />
         </div>
       </q-toolbar>
     </q-header>
@@ -27,6 +28,15 @@
           v-bind="link"
         />
       </q-list>
+      <q-list v-if="isLoggedIn">
+        <q-item-label header>  Mon espace </q-item-label>
+
+        <EssentialLink
+          v-for="link in customerLinks"
+          :key="link.title"
+          v-bind="link"
+        />
+      </q-list>
     </q-drawer>
 
     <q-page-container class="background-color" >
@@ -36,11 +46,14 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { onMounted, onUnmounted, ref } from "vue";
 import { useRouter } from "vue-router";
 import EssentialLink, {
   EssentialLinkProps,
 } from "components/EssentialLink.vue";
+import { getUserInfo } from "../api/services/api";
+
+const isLoggedIn = ref(localStorage.getItem('token') !== null);
 
 const essentialLinks: EssentialLinkProps[] = [
   {
@@ -50,17 +63,43 @@ const essentialLinks: EssentialLinkProps[] = [
     link: "/",
   },
   {
-    title: "Reservation",
+    title: "Réservation",
     caption: "Reservation",
     icon: "check",
     link: "#/reservation",
   },
 ];
 
+const customerLinks: EssentialLinkProps[] = [
+  {
+    title: "Espace client",
+    caption: "Gestion de compte",
+    icon: "account_circle",
+    link: "#/dashboard",
+  },
+  {
+    title: "Mes Reservation",
+    caption: "Mes Reservation",
+    icon: "",
+    link: "#/reservation",
+  },
+];
+
+const userInfo = ref(null);
 const router = useRouter();
 
 const goToLoginPage = () => {
   router.push("/login");
+};
+
+const updateLoginStatus = () => {
+  isLoggedIn.value = localStorage.getItem('token') !== null;
+};
+
+const logout = () => {
+  localStorage.removeItem('token');
+  isLoggedIn.value = false;
+  router.push("/");
 };
 
 const leftDrawerOpen = ref(false);
@@ -68,6 +107,15 @@ const leftDrawerOpen = ref(false);
 function toggleLeftDrawer() {
   leftDrawerOpen.value = !leftDrawerOpen.value;
 }
+
+onMounted(async () => {
+  window.addEventListener('storage', updateLoginStatus);
+});
+
+onUnmounted(() => {
+  window.removeEventListener('storage', updateLoginStatus);
+});
+
 </script>
 
 <style>

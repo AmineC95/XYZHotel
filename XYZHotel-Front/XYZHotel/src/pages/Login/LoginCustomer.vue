@@ -70,10 +70,7 @@
 <script setup lang="ts">
 import { reactive, ref } from "vue";
 import { useRouter } from "vue-router";
-import {
-  LoginRequest,
-  Customer,
-} from "../../api/models/index";
+import { LoginRequest, Customer } from "../../api/models/index";
 import { login, createCustomer } from "../../api/services/api";
 
 const credentials = reactive<LoginRequest>({
@@ -117,8 +114,9 @@ const loginCustomer = async () => {
   try {
     const response = await login(credentials);
     console.log(response);
-    localStorage.setItem('token', response.Token);
-    router.push('/dashboard');
+    localStorage.setItem("token", response.Token);
+    window.dispatchEvent(new Event("storage"));
+    router.push("/dashboard");
   } catch (error) {
     console.error(error);
   }

@@ -209,20 +209,5 @@ namespace XYZHotel.Domain.Controller
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
-
-
-        //public void SetCustomerPassword(Guid customerId, string newPassword)
-        //{
-        //    var customers = ReadCustomersFromCsv();
-        //    var customer = customers.FirstOrDefault(c => c.Id == customerId);
-        //    if (customer == null)
-        //    {
-        //        throw new Exception("Customer not found.");
-        //    }
-
-        //    customer.PasswordHash = BCrypt.Net.BCrypt.HashPassword(newPassword);
-        //    WriteCustomersToCsv(customers);
-        //}
-
     }
 }
