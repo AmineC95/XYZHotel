@@ -3,12 +3,12 @@
     <q-card class="q-px-xl">
       <q-card-section class="q-mx-xl">
         <q-form @submit.prevent="submitReservation" class="q-py-xl q-gutter-md">
-          <q-input
+          <!-- <q-input
             label="Customer ID"
             v-model="reservation.customer.id"
             required
-          />
-          <q-input
+          /> -->
+          <!-- <q-input
             label="Full Name"
             v-model="reservation.customer.fullName"
             required
@@ -18,8 +18,7 @@
             type="email"
             v-model="reservation.customer.email.value"
             required
-
-          />
+          /> -->
           <q-input
             label="Phone Number"
             v-model="reservation.customer.phoneNumber.number"
@@ -98,16 +97,16 @@ const reservation = ref<Reservation>({
   },
   room: {
     id: '',
-    type: RoomType.Value0,
+    type: RoomType.Standard,
     pricePerNight: {
       amount: null,
-      currency: Currency.Value0,
+      currency: Currency.EUR,
     },
   },
   checkInDate: '',
   checkOutDate: '',
   numberOfNights: 0,
-  status: ReservationStatus.Value0,
+  status: ReservationStatus.Pending,
 });
 
 const statusOptions = Object.values(ReservationStatus).filter(value => typeof value === 'number');

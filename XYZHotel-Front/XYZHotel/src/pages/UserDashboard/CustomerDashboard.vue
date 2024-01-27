@@ -14,7 +14,45 @@
           <q-input v-model="user.Email.Value" label="Email" />
           <q-input v-model="user.PasswordHash" label="Mot de passe" />
           <q-btn label="Mettre à jour" type="submit" color="primary" />
+          <q-btn
+            label="Supprimer mon compte"
+            type="button"
+            color="negative"
+            @click="deleteUser"
+          />
         </q-form>
+      </q-card-section>
+    </q-card>
+    <q-card>
+      <q-card-section>
+        <div class="text-h6">
+          <q-icon name="account_balance_wallet" class="q-mr-sm" />
+          Recharger son portefeuille
+        </div>
+        <div class="text-subtitle2">
+          Entrez le montant que vous souhaitez ajouter à votre portefeuille :
+        </div>
+        <q-input
+          v-model="amount"
+          type="number"
+          placeholder="Montant"
+          class="q-mt-md"
+        />
+        <q-select
+          v-model="currency"
+          :options="['EUR', 'USD', 'GBP']"
+          label="Devise"
+          class="q-mt-md"
+        />
+        <q-btn
+          label="Recharger"
+          color="primary"
+          class="q-mt-md"
+          @click="rechargeWallet"
+        />
+        <div class="text-subtitle2 q-mt-md">
+          Solde du portefeuille : {{ walletBalance }} EUR
+        </div>
       </q-card-section>
     </q-card>
   </q-page>
@@ -22,7 +60,11 @@
 
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
-import { getUserInfo, updateCustomer } from "../../api/services/api";
+import {
+  getUserInfo,
+  updateCustomer,
+  deleteCustomer,
+} from "../../api/services/api";
 import { Customer } from "../../api/models/index";
 
 const user = ref<Customer>({
@@ -32,6 +74,10 @@ const user = ref<Customer>({
   PasswordHash: "",
   PhoneNumber: { Number: "" },
 });
+
+const rechargeWallet = () => {
+  // Logic to recharge the wallet goes here
+};
 
 const transformUserInfo = (userInfo: any): Customer => ({
   Id: userInfo.Id,
@@ -43,11 +89,20 @@ const transformUserInfo = (userInfo: any): Customer => ({
 
 const updateUserInfo = async () => {
   if (!user.value.Id) {
-    console.error('User ID is undefined');
+    console.error("User ID is undefined");
     return;
   }
-  console.log("update Dzata",user.value.Id, user.value);
+  console.log("update Dzata", user.value.Id, user.value);
   await updateCustomer(user.value.Id, user.value);
+};
+
+const deleteUser = async () => {
+  if (!user.value.Id) {
+    console.error("User ID is undefined");
+    return;
+  }
+  console.log("Deleting user", user.value.Id);
+  await deleteCustomer(user.value.Id);
 };
 
 onMounted(async () => {
