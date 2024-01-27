@@ -17,11 +17,22 @@ export const createCustomer = async (
   return response.data;
 };
 
-export const updateCustomer = async (
-  id: string,
-  updatedCustomer: Customer,
-): Promise<void> => {
-  await api.put(`/UpdateCustomer/${id}`, updatedCustomer);
+// export const updateCustomer = async (id: string, updatedCustomer: Customer): Promise<void> => {
+//   const response = await api.put<void>(`/UpdateCustomer/${id}`, updatedCustomer);
+//   console.log(response.data);
+//   return response.data;
+// };
+
+export const updateCustomer = async (id: string, updatedCustomer: Customer): Promise<void> => {
+  console.log(`Updating customer with ID ${id}`);
+  console.log('Updated customer data:', updatedCustomer);
+
+  const response = await api.put<void>(`/UpdateCustomer/${id}`, updatedCustomer, {
+    headers: { 'Content-Type': 'application/json' }
+  });
+
+  console.log('Response data:', response.data);
+  return response.data;
 };
 
 export const deleteCustomer = async (id: string): Promise<void> => {

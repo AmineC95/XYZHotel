@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -161,15 +162,23 @@ namespace XYZHotel.Domain.Controller
         [HttpGet("/GetUserInfo")]
         public IActionResult GetUserInfo()
         {
-            var fullname = User.Claims.ToList().FirstOrDefault().Value;
-
             var emailClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email);
             var email = emailClaim?.Value;
 
+
+            var customers = ReadCustomersFromCsv();
+            var customer = customers.FirstOrDefault(c => c.Email.Value == email);
+            if (customer == null)
+            {
+                return NotFound("User not found.");
+            }
+
             var user = new
             {
-                Fullname = fullname,
-                Email = email
+                Id = customer.Id,
+                FullName = customer.FullName,
+                Email = customer.Email.Value,
+                PhoneNumber = customer.PhoneNumber,
             };
 
             return Ok(user);

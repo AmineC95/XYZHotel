@@ -7,7 +7,7 @@ namespace XYZHotel.Domain.Entities
         public Guid? Id { get; set; }
         public string? FullName { get; set; }
         public Email? Email { get;  set; }
-        public PhonesNumber PhoneNumber { get;  set; }
-        public string PasswordHash { get; set; }
+        public PhonesNumber? PhoneNumber { get;  set; }
+        public string? PasswordHash { get; set; }
     }
 }
