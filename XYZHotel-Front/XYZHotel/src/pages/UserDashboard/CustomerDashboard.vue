@@ -3,16 +3,16 @@
     <q-card>
       <q-card-section>
         <div class="text-h6">Réservations actuelles</div>
-        <div v-if="room.value" class="text-subtitle1">
-          Chambre sélectionnée : {{ room.value.Type }}
+        <div v-if="room" class="text-subtitle1">
+          Chambre sélectionnée : {{ room.Type }}
         </div>
-        <div v-if="room.value && room.value.PricePerNight" class="text-subtitle2">
-          Prix par nuit : {{ room.value.PricePerNight.Amount }} EUR
+        <div v-if="room && room.PricePerNight" class="text-subtitle2">
+          Prix par nuit : {{ room.PricePerNight.Amount }} EUR
         </div>
-        <div v-if="room.value && room.value.Infos" class="text-subtitle2">
+        <div v-if="room && room.Infos" class="text-subtitle2">
           Informations :
           <ul>
-            <li v-for="(info, index) in room.value.Infos" :key="index">
+            <li v-for="(info, index) in room.Infos" :key="index">
               {{ info }}
             </li>
           </ul>
@@ -102,8 +102,8 @@ const walletBalance = ref({ Balance: { Amount: 0 } });
 const room = ref<Room | null>({
   Id: undefined,
   Type: undefined,
-  PricePerNight: {Amount: undefined, Currency: undefined},
-  Infos: undefined
+  PricePerNight: { Amount: undefined, Currency: undefined },
+  Infos: undefined,
 });
 
 const rechargeWallet = async () => {
@@ -166,7 +166,14 @@ onMounted(async () => {
   const roomString = localStorage.getItem("room");
 
   if (roomString) {
-    room.value = JSON.parse(roomString);
+    try {
+      room.value = JSON.parse(roomString);
+      console.log("room.value:", room.value);
+    } catch (error) {
+      console.error("Failed to parse room data from localStorage", error);
+    }
+  } else {
+    console.log('No data in localStorage for key "room"');
   }
 
   if (user.value.Id) {
