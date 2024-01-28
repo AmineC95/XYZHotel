@@ -3,6 +3,20 @@
     <q-card>
       <q-card-section>
         <div class="text-h6">Réservations actuelles</div>
+        <div v-if="room.value" class="text-subtitle1">
+          Chambre sélectionnée : {{ room.value.Type }}
+        </div>
+        <div v-if="room.value && room.value.PricePerNight" class="text-subtitle2">
+          Prix par nuit : {{ room.value.PricePerNight.Amount }} EUR
+        </div>
+        <div v-if="room.value && room.value.Infos" class="text-subtitle2">
+          Informations :
+          <ul>
+            <li v-for="(info, index) in room.value.Infos" :key="index">
+              {{ info }}
+            </li>
+          </ul>
+        </div>
       </q-card-section>
     </q-card>
     <q-card>
@@ -40,7 +54,7 @@
         />
         <q-select
           v-model="currency"
-          :options="['EUR', 'USD', 'GBP']"
+          :options="currencies"
           label="Devise"
           class="q-mt-md"
         />
@@ -51,7 +65,8 @@
           @click="rechargeWallet"
         />
         <div class="text-subtitle2 q-mt-md">
-          Solde du portefeuille : {{ walletBalance.Balance ? walletBalance.Balance.Amount : 0 }} EUR
+          Solde du portefeuille :
+          {{ walletBalance.Balance ? walletBalance.Balance.Amount : 0 }} EUR
         </div>
       </q-card-section>
     </q-card>
@@ -69,7 +84,7 @@ import {
   createWallet as apiCreateWallet,
   debitWallet as apiDebitWallet,
 } from "../../api/services/api";
-import { Customer } from "../../api/models/index";
+import { Customer, Currency, Room } from "../../api/models/index";
 
 const user = ref<Customer>({
   Id: "",
@@ -79,9 +94,17 @@ const user = ref<Customer>({
   PhoneNumber: { Number: "" },
 });
 
+const currencies = ref(Object.values(Currency));
+
 const amount = ref(0);
-const currency = ref('EUR');
+const currency = ref("EUR");
 const walletBalance = ref({ Balance: { Amount: 0 } });
+const room = ref<Room | null>({
+  Id: undefined,
+  Type: undefined,
+  PricePerNight: {Amount: undefined, Currency: undefined},
+  Infos: undefined
+});
 
 const rechargeWallet = async () => {
   if (!user.value.Id) {
@@ -101,7 +124,7 @@ const getWalletBalance = async () => {
   console.log("Getting wallet balance", user.value.Id);
   try {
     walletBalance.value = await apiGetWalletBalance(user.value.Id);
-  } catch (error:any) {
+  } catch (error: any) {
     console.error("Failed to get wallet balance", error);
     if (error.response && error.response.status === 404) {
       console.log("Wallet not found, creating a new one", user.value.Id);
@@ -139,9 +162,16 @@ const deleteUser = async () => {
 onMounted(async () => {
   const response = await getUserInfo();
   user.value = transformUserInfo(response);
+
+  const roomString = localStorage.getItem("room");
+
+  if (roomString) {
+    room.value = JSON.parse(roomString);
+  }
+
   if (user.value.Id) {
     await getWalletBalance();
-    if (walletBalance.value === 0) {
+    if (walletBalance.value.Balance.Amount === 0) {
       await apiCreateWallet(user.value.Id);
       await getWalletBalance();
     }

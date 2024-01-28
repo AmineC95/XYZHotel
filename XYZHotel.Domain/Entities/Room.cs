@@ -8,5 +8,6 @@ namespace XYZHotel.Domain.Entities
         public int Id { get; set; }
         public RoomType? Type { get; set; }
         public Balance? PricePerNight { get; set; }
+        public List<string>? Infos { get; set; }
     }
 }

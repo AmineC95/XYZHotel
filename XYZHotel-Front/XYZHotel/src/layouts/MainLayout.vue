@@ -66,7 +66,7 @@ const essentialLinks: EssentialLinkProps[] = [
     title: "Réservation",
     caption: "Reservation",
     icon: "check",
-    link: "#/reservation",
+    link: "#/booking",
   },
 ];
 
@@ -81,7 +81,7 @@ const customerLinks: EssentialLinkProps[] = [
     title: "Mes Reservation",
     caption: "Mes Reservation",
     icon: "",
-    link: "#/reservation",
+    link: "#/booking",
   },
 ];
 

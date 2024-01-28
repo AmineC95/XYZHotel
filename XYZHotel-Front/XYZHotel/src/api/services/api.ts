@@ -1,5 +1,5 @@
 import axios from "axios";
-import { Customer, LoginRequest } from "../models";
+import { Customer, LoginRequest,Room } from "../models";
 
 const api = axios.create({
   baseURL: "https://localhost:7057",
@@ -76,5 +76,12 @@ export const getUserInfo = async (): Promise<any> => {
   });
   return response.data;
 };
+
+//Room
+export const getRooms = async (): Promise<Room[]> => {
+  const response = await api.get<Room[]>("/api/room");
+  return response.data;
+};
+
 
 export default api;

@@ -116,7 +116,10 @@ const loginCustomer = async () => {
     console.log(response);
     localStorage.setItem("token", response.Token);
     window.dispatchEvent(new Event("storage"));
-    router.push("/dashboard");
+    // Récupérez la chambre passée en paramètre
+    const room = router.currentRoute.value.params.room;
+    // Redirigez vers la page "/dashboard" avec la chambre en paramètre
+    router.push({ name: "Dashboard", params: { room } });
   } catch (error) {
     console.error(error);
   }

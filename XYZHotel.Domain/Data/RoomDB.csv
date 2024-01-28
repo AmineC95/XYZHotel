@@ -1,4 +1,4 @@
-﻿Id,TypeRoom,PricePerNight
-123e4567-e89b-12d3-a456-426655440000,0,100.00
-123e4567-e89b-12d3-a456-426655440001,1,150.00
-123e4567-e89b-12d3-a456-426655440002,2,200.00
+﻿Id,Type,PricePerNight,Infos
+1,Standard,50,"Lit 1 place,Wifi,TV"
+2,Superior,100,"Lit 2 places,Wifi,TV écran plat,Minibar,Climatiseur"
+3,Suite,200,"Lit 2 places,Wifi,TV écran plat,Minibar,Climatiseur,Baignoire,Terrasse"

@@ -72,6 +72,7 @@ export interface Room {
   Id?: number;
   Type?: RoomType;
   PricePerNight?: Balance;
+  Infos?: string[] | null;
 }
 
 export enum RoomType {
