@@ -53,3 +53,11 @@
 - Email
 - PhoneNumber
 
+## Implémentation de la base de données
+
+- Un fichier csv
+
+## Implémentation de l'infrastructure
+
+- Une API HTTP
+
