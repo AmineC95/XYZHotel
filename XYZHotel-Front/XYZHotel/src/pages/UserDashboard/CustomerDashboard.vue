@@ -25,6 +25,38 @@
                 </li>
               </ul>
             </div>
+
+            <!-- Ajout des nouveaux éléments -->
+            <q-date
+              v-model="dateRange"
+              range
+              label="Sélectionnez la plage de dates"
+              class="q-mt-md"
+            />
+            <q-input
+              v-model="numberOfRooms"
+              type="number"
+              min="1"
+              step="1"
+              label="Nombre de chambres"
+              class="q-mt-md"
+            />
+            <div class="text-subtitle2 q-mt-md">
+              Nombre de nuits : <span>{{ numberOfNights }}</span>
+            </div>
+            <div class="text-subtitle2 q-mt-md">
+              Montant total de la réservation :
+              <span>{{ totalAmount }} EUR</span>
+            </div>
+
+            <q-btn
+              label="Valider"
+              type="button"
+              color="primary"
+              class="q-mt-md"
+              :disabled="totalAmount === 0"
+              @click="validateReservation"
+            />
           </q-card-section>
         </q-card>
       </q-tab-panel>
@@ -93,18 +125,18 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
+import { onMounted, ref, computed } from "vue";
 import {
   getUserInfo,
   updateCustomer,
   deleteCustomer,
   creditWallet as apiRechargeWallet,
   getWallet as apiGetWalletBalance,
-  createWallet as apiCreateWallet,
-  debitWallet as apiDebitWallet,
+  createWallet as apiCreateWallet
 } from "../../api/services/api";
 import { Customer, Currency, Room } from "../../api/models/index";
 
+// Réactifs et états
 const user = ref<Customer>({
   Id: "",
   FullName: "",
@@ -112,29 +144,49 @@ const user = ref<Customer>({
   PasswordHash: "",
   PhoneNumber: { Number: "" },
 });
-
-const currencies = ref(Object.values(Currency));
-const tab = ref('reservations');
-const amount = ref(0);
-const currency = ref("EUR");
-const walletBalance = ref({ Balance: { Amount: 0 } });
 const room = ref<Room | null>({
   Id: undefined,
   Type: undefined,
   PricePerNight: { Amount: undefined, Currency: undefined },
   Infos: undefined,
 });
+const tab = ref("reservations");
+const amount = ref(0);
+const currency = ref("EUR");
+const walletBalance = ref({ Balance: { Amount: 0 } });
+const dateRange = ref({ from: "", to: "" });
+const numberOfRooms = ref(1);
+const currencies = ref(Object.values(Currency));
 
-const rechargeWallet = async () => {
-  if (!user.value.Id) {
-    console.error("User ID is undefined");
-    return;
+// Calculs
+const numberOfNights = computed(() => {
+  if (dateRange.value.from && dateRange.value.to) {
+    const date1 = new Date(dateRange.value.from);
+    const date2 = new Date(dateRange.value.to);
+    const diffTime = Math.abs(date2.getTime() - date1.getTime());
+    return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
   }
-  console.log("Recharging wallet", user.value.Id, amount.value, currency.value);
-  await apiRechargeWallet(user.value.Id, amount.value, currency.value);
-  await getWalletBalance();
-};
+  return 0;
+});
+const totalAmount = computed(() => {
+  if (room.value?.PricePerNight?.Amount) {
+    return (
+      room.value.PricePerNight.Amount *
+      numberOfNights.value *
+      numberOfRooms.value
+    );
+  }
+  return 0;
+});
 
+// Fonctions
+const transformUserInfo = (userInfo: any): Customer => ({
+  Id: userInfo.Id,
+  FullName: userInfo.FullName,
+  Email: { Value: userInfo.Email },
+  PasswordHash: "",
+  PhoneNumber: { Number: userInfo.PhoneNumber.Number },
+});
 const getWalletBalance = async () => {
   if (!user.value.Id) {
     console.error("User ID is undefined");
@@ -152,14 +204,15 @@ const getWalletBalance = async () => {
     }
   }
 };
-const transformUserInfo = (userInfo: any): Customer => ({
-  Id: userInfo.Id,
-  FullName: userInfo.FullName,
-  Email: { Value: userInfo.Email },
-  PasswordHash: "",
-  PhoneNumber: { Number: userInfo.PhoneNumber.Number },
-});
-
+const rechargeWallet = async () => {
+  if (!user.value.Id) {
+    console.error("User ID is undefined");
+    return;
+  }
+  console.log("Recharging wallet", user.value.Id, amount.value, currency.value);
+  await apiRechargeWallet(user.value.Id, amount.value, currency.value);
+  await getWalletBalance();
+};
 const updateUserInfo = async () => {
   if (!user.value.Id) {
     console.error("User ID is undefined");
@@ -168,7 +221,6 @@ const updateUserInfo = async () => {
   console.log("update Dzata", user.value.Id, user.value);
   await updateCustomer(user.value.Id, user.value);
 };
-
 const deleteUser = async () => {
   if (!user.value.Id) {
     console.error("User ID is undefined");
@@ -177,7 +229,11 @@ const deleteUser = async () => {
   console.log("Deleting user", user.value.Id);
   await deleteCustomer(user.value.Id);
 };
+const validateReservation = () => {
+  console.log("Réservation validée");
+};
 
+// Gestion du cycle de vie
 onMounted(async () => {
   const response = await getUserInfo();
   user.value = transformUserInfo(response);
@@ -210,5 +266,4 @@ onMounted(async () => {
 .q-tab-panels {
   margin-top: 20px;
 }
-
 </style>
