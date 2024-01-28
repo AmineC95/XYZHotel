@@ -1,42 +1,6 @@
 
 ![image](https://github.com/AmineC95/XYZHotel/assets/87375880/0863e963-d841-4c94-9d0f-486289624529)
 
-
-XYZHotel.Domain/
-│
-├── Entities/                            # Entités représentant les concepts métiers
-│   ├── Customer.cs                      # Entité Client
-│   ├── Reservation.cs                   # Entité Réservation
-│   ├── Room.cs                          # Entité Chambre
-│   └── Payment.cs                       # Entité Paiement
-│
-├── Enums/                               # Énumérations pour les valeurs fixes
-│   ├── Currency.cs                      # Devise
-│   ├── ReservationStatus.cs             # Statut de la Réservation
-│   └── RoomType.cs                      # Type de Chambre
-│
-├── ValueObjects/                        # Objets de valeur (Value Objects)
-│   ├── Email.cs                         # Objet de valeur Email
-│   ├── PhoneNumber.cs                   # Objet de valeur Numéro de Téléphone
-│   └── Address.cs                       # Objet de valeur Adresse
-│
-├── Services/                            # Services pour la logique métier
-│   ├── ReservationService.cs            # Service pour la gestion des réservations
-│   ├── PaymentService.cs                # Service pour la gestion des paiements
-│   └── CustomerService.cs               # Service pour la gestion des clients
-│
-├── Interfaces/                          # Interfaces pour les services
-│   ├── IReservationService.cs           # Interface pour ReservationService
-│   ├── IPaymentService.cs               # Interface pour PaymentService
-│   └── ICustomerService.cs              # Interface pour CustomerService
-│
-├── DataAccess/                          # Couche d'accès aux données
-│   ├── Repositories/                    # Répertoires pour les entités
-│   └── DbContext.cs                     # Contexte de base de données (si EF Core est utilisé)
-│
-└── README.md                            # Documentation du projet
-
-
 ## Ubiquitous Language:
 
 - **Réservation (Booking) :** 
@@ -74,3 +38,18 @@ XYZHotel.Domain/
     Gestion des Clients, Gestion des Chambres - Ils soutiennent le domaine principal mais ne sont pas le focus principal.
 - **Domaines Génériques (Generic Domains) :** 
     Services tels que la gestion des paiements, notifications, ou services de conversion de devises - Ces services sont importants mais ne sont pas uniques au domaine d'activité.
+
+
+## Entités
+
+- Customer
+- Reservation
+- Room
+- Wallet
+
+## Objets de valeur
+
+- Balance
+- Email
+- PhoneNumber
+
