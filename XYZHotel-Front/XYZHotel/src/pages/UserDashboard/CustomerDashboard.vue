@@ -71,8 +71,6 @@ import {
 } from "../../api/services/api";
 import { Customer } from "../../api/models/index";
 
-
-
 const user = ref<Customer>({
   Id: "",
   FullName: "",
