@@ -1,75 +1,94 @@
 <template>
   <q-page padding>
-    <q-card>
-      <q-card-section>
-        <div class="text-h6">Réservations actuelles</div>
-        <div v-if="room" class="text-subtitle1">
-          Chambre sélectionnée : {{ room.Type }}
-        </div>
-        <div v-if="room && room.PricePerNight" class="text-subtitle2">
-          Prix par nuit : {{ room.PricePerNight.Amount }} EUR
-        </div>
-        <div v-if="room && room.Infos" class="text-subtitle2">
-          Informations :
-          <ul>
-            <li v-for="(info, index) in room.Infos" :key="index">
-              {{ info }}
-            </li>
-          </ul>
-        </div>
-      </q-card-section>
-    </q-card>
-    <q-card>
-      <q-card-section>
-        <div class="text-h6">Modifier les informations de l'utilisateur</div>
-        <q-form @submit="updateUserInfo">
-          <q-input v-model="user.FullName" label="Nom complet" />
-          <q-input v-model="user.PhoneNumber.Number" label="Telephone" />
-          <q-input v-model="user.Email.Value" label="Email" />
-          <q-input v-model="user.PasswordHash" label="Mot de passe" />
-          <q-btn label="Mettre à jour" type="submit" color="primary" />
-          <q-btn
-            label="Supprimer mon compte"
-            type="button"
-            color="negative"
-            @click="deleteUser"
-          />
-        </q-form>
-      </q-card-section>
-    </q-card>
-    <q-card>
-      <q-card-section>
-        <div class="text-h6">
-          <q-icon name="account_balance_wallet" class="q-mr-sm" />
-          Gerer son portefeuille
-        </div>
-        <div class="text-subtitle2">
-          Entrez le montant que vous souhaitez ajouter à votre portefeuille :
-        </div>
-        <q-input
-          v-model="amount"
-          type="number"
-          placeholder="Montant"
-          class="q-mt-md"
-        />
-        <q-select
-          v-model="currency"
-          :options="currencies"
-          label="Devise"
-          class="q-mt-md"
-        />
-        <q-btn
-          label="Recharger"
-          color="primary"
-          class="q-mt-md"
-          @click="rechargeWallet"
-        />
-        <div class="text-subtitle2 q-mt-md">
-          Solde du portefeuille :
-          {{ walletBalance.Balance ? walletBalance.Balance.Amount : 0 }} EUR
-        </div>
-      </q-card-section>
-    </q-card>
+    <q-tabs v-model="tab" align="left" class="text-primary" dense>
+      <q-tab name="reservations" label="Réservations" />
+      <q-tab name="userInfo" label="Informations Utilisateur" />
+      <q-tab name="wallet" label="Portefeuille" />
+    </q-tabs>
+
+    <q-tab-panels v-model="tab" animated>
+      <q-tab-panel name="reservations">
+        <q-card>
+          <q-card-section>
+            <div class="text-h6">Réservations actuelles</div>
+            <div v-if="room" class="text-subtitle1">
+              Chambre sélectionnée : {{ room.Type }}
+            </div>
+            <div v-if="room && room.PricePerNight" class="text-subtitle2">
+              Prix par nuit : {{ room.PricePerNight.Amount }} EUR
+            </div>
+            <div v-if="room && room.Infos" class="text-subtitle2">
+              Informations :
+              <ul>
+                <li v-for="(info, index) in room.Infos" :key="index">
+                  {{ info }}
+                </li>
+              </ul>
+            </div>
+          </q-card-section>
+        </q-card>
+      </q-tab-panel>
+
+      <q-tab-panel name="userInfo">
+        <q-card>
+          <q-card-section>
+            <div class="text-h6">
+              Modifier les informations de l'utilisateur
+            </div>
+            <q-form @submit="updateUserInfo">
+              <q-input v-model="user.FullName" label="Nom complet" />
+              <q-input v-model="user.PhoneNumber.Number" label="Telephone" />
+              <q-input v-model="user.Email.Value" label="Email" />
+              <q-input v-model="user.PasswordHash" label="Mot de passe" />
+              <q-btn label="Mettre à jour" type="submit" color="primary" />
+              <q-btn
+                label="Supprimer mon compte"
+                type="button"
+                color="negative"
+                @click="deleteUser"
+              />
+            </q-form>
+          </q-card-section>
+        </q-card>
+      </q-tab-panel>
+
+      <q-tab-panel name="wallet">
+        <q-card>
+          <q-card-section>
+            <div class="text-h6">
+              <q-icon name="account_balance_wallet" class="q-mr-sm" />
+              Gerer son portefeuille
+            </div>
+            <div class="text-subtitle2">
+              Entrez le montant que vous souhaitez ajouter à votre portefeuille
+              :
+            </div>
+            <q-input
+              v-model="amount"
+              type="number"
+              placeholder="Montant"
+              class="q-mt-md"
+            />
+            <q-select
+              v-model="currency"
+              :options="currencies"
+              label="Devise"
+              class="q-mt-md"
+            />
+            <q-btn
+              label="Recharger"
+              color="primary"
+              class="q-mt-md"
+              @click="rechargeWallet"
+            />
+            <div class="text-subtitle2 q-mt-md">
+              Solde du portefeuille :
+              {{ walletBalance.Balance ? walletBalance.Balance.Amount : 0 }} EUR
+            </div>
+          </q-card-section>
+        </q-card>
+      </q-tab-panel>
+    </q-tab-panels>
   </q-page>
 </template>
 
@@ -95,7 +114,7 @@ const user = ref<Customer>({
 });
 
 const currencies = ref(Object.values(Currency));
-
+const tab = ref('reservations');
 const amount = ref(0);
 const currency = ref("EUR");
 const walletBalance = ref({ Balance: { Amount: 0 } });
@@ -187,3 +206,9 @@ onMounted(async () => {
   }
 });
 </script>
+<style>
+.q-tab-panels {
+  margin-top: 20px;
+}
+
+</style>
