@@ -83,5 +83,10 @@ export const getRooms = async (): Promise<Room[]> => {
   return response.data;
 };
 
+export const createReservation = async (reservation: Reservation): Promise<Reservation> => {
+  console.log("Sending reservation data:", reservation); // Ajoutez cette ligne
+  const response = await api.post<Reservation>("/CreateReservation", reservation);
+  return response.data;
+};
 
 export default api;

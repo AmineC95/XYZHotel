@@ -46,7 +46,15 @@ namespace XYZHotel.Api.Controllers
         {
             var reservations = ReadReservationsFromCsv();
 
-            newReservation.Id = (Guid)newReservation.Customer.Id;
+            if (newReservation.Customer?.Id != null)
+            {
+                newReservation.Id = (Guid)newReservation.Customer.Id;
+            }
+            else
+            {
+                // Générer un nouvel ID pour la réservation si Customer.Id est null
+                newReservation.Id = Guid.NewGuid();
+            }
             reservations.Add(newReservation);
             WriteReservationsToCsv(reservations);
 

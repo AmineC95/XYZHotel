@@ -150,7 +150,7 @@ import {
   getWallet as apiGetWalletBalance,
   createWallet as apiCreateWallet,
 } from "../../api/services/api";
-import { Customer, Currency, Room } from "../../api/models/index";
+import { Customer, Currency, Room, Reservation } from "../../api/models/index";
 import {
   getReservation,
   createReservation,
@@ -165,6 +165,11 @@ const user = ref<Customer>({
   Email: { Value: "" },
   PasswordHash: "",
   PhoneNumber: { Number: "" },
+});
+const reservationStatus = Object.freeze({
+  PENDING: 1,
+  CONFIRMED: 2,
+  CANCELLED: 3,
 });
 const room = ref<Room | null>({
   Id: undefined,
@@ -182,7 +187,7 @@ const currencies = ref(Object.values(Currency));
 
 // Calculs
 const numberOfNights = computed(() => {
-  if (dateRange.value.from && dateRange.value.to) {
+  if (dateRange.value && dateRange.value.from && dateRange.value.to) {
     const date1 = new Date(dateRange.value.from);
     const date2 = new Date(dateRange.value.to);
     const diffTime = Math.abs(date2.getTime() - date1.getTime());
@@ -217,33 +222,38 @@ const validateReservation = async () => {
   }
 
   const reservation = {
-    Customer: {
-      Id: user.value.Id,
-      FullName: user.value.FullName,
-      Email: user.value.Email.Value,
-      PhoneNumber: {
-        Number: user.value.PhoneNumber.Number,
+    newReservation: {
+      Customer: {
+        Id: user.value.Id,
+        FullName: user.value.FullName,
+        Email: { Value: user.value.Email?.Value },
+        PhoneNumber: {
+          Number: user.value.PhoneNumber?.Number,
+        },
       },
-      PasswordHash: user.value.PasswordHash,
+      Room: {
+        Id: room.value.Id,
+        Type: room.value.Type,
+        PricePerNight: room.value.PricePerNight?.Amount,
+        Infos: room.value.Infos,
+      },
+      CheckInDate: dateRange.value.from,
+      CheckOutDate: dateRange.value.to,
+      NumberOfNights: numberOfNights.value,
+      Status: reservationStatus.PENDING,
     },
-    Room: {
-      Id: room.value.Id,
-      Type: room.value.Type,
-      PricePerNight: room.value.PricePerNight.Amount,
-      Infos: Array.from(room.value.Infos),
-    },
-    CheckInDate: dateRange.value.from,
-    CheckOutDate: dateRange.value.to,
-    NumberOfNights: numberOfNights.value,
-    Status: "Pending",
   };
 
+  console.log("reservation", reservation);
   try {
-    console.log("Creating reservation", reservation);
     await createReservation(reservation);
-    console.log("Réservation créée avec succès", reservation);
-  } catch (error) {
+    console.log("Réservation créée avec succès");
+  } catch (error: any) {
     console.error("Échec de la création de la réservation", error);
+    if (error.response && error.response.data) {
+      console.error("Response status:", error.response.status);
+      console.error("Response data:", error.response.data);
+    }
   }
 };
 
