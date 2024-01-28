@@ -4,8 +4,13 @@ namespace XYZHotel.Domain.Entities
 {
     public class Wallet
     {
-        public Guid? Id { get; private set; }
-        public Customer? Owner { get; private set; }
-        public Balance? Balance { get; private set; }
+        public Guid Id { get; }
+        public Balance Balance { get; }
+
+        public Wallet(Guid id, Balance balance)
+        {
+            Id = id;
+            Balance = balance;
+        }
     }
 }

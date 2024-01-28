@@ -79,13 +79,3 @@ export enum RoomType {
   Superior = "Superior",
   Suite = "Suite",
 }
-
-export interface WeatherForecast {
-  /** @format date */
-  Date?: string;
-  /** @format int32 */
-  TemperatureC?: number;
-  /** @format int32 */
-  TemperatureF?: number;
-  Summary?: string | null;
-}

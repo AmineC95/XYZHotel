@@ -27,7 +27,7 @@
       <q-card-section>
         <div class="text-h6">
           <q-icon name="account_balance_wallet" class="q-mr-sm" />
-          Recharger son portefeuille
+          Gerer son portefeuille
         </div>
         <div class="text-subtitle2">
           Entrez le montant que vous souhaitez ajouter à votre portefeuille :
@@ -51,7 +51,7 @@
           @click="rechargeWallet"
         />
         <div class="text-subtitle2 q-mt-md">
-          Solde du portefeuille : {{ walletBalance }} EUR
+          Solde du portefeuille : {{ walletBalance.Balance ? walletBalance.Balance.Amount : 0 }} EUR
         </div>
       </q-card-section>
     </q-card>
@@ -64,8 +64,14 @@ import {
   getUserInfo,
   updateCustomer,
   deleteCustomer,
+  creditWallet as apiRechargeWallet,
+  getWallet as apiGetWalletBalance,
+  createWallet as apiCreateWallet,
+  debitWallet as apiDebitWallet,
 } from "../../api/services/api";
 import { Customer } from "../../api/models/index";
+
+
 
 const user = ref<Customer>({
   Id: "",
@@ -75,10 +81,37 @@ const user = ref<Customer>({
   PhoneNumber: { Number: "" },
 });
 
-const rechargeWallet = () => {
-  // Logic to recharge the wallet goes here
+const amount = ref(0);
+const currency = ref('EUR');
+const walletBalance = ref({ Balance: { Amount: 0 } });
+
+const rechargeWallet = async () => {
+  if (!user.value.Id) {
+    console.error("User ID is undefined");
+    return;
+  }
+  console.log("Recharging wallet", user.value.Id, amount.value, currency.value);
+  await apiRechargeWallet(user.value.Id, amount.value, currency.value);
+  await getWalletBalance();
 };
 
+const getWalletBalance = async () => {
+  if (!user.value.Id) {
+    console.error("User ID is undefined");
+    return;
+  }
+  console.log("Getting wallet balance", user.value.Id);
+  try {
+    walletBalance.value = await apiGetWalletBalance(user.value.Id);
+  } catch (error:any) {
+    console.error("Failed to get wallet balance", error);
+    if (error.response && error.response.status === 404) {
+      console.log("Wallet not found, creating a new one", user.value.Id);
+      await apiCreateWallet(user.value.Id);
+      walletBalance.value = await apiGetWalletBalance(user.value.Id);
+    }
+  }
+};
 const transformUserInfo = (userInfo: any): Customer => ({
   Id: userInfo.Id,
   FullName: userInfo.FullName,
@@ -108,5 +141,14 @@ const deleteUser = async () => {
 onMounted(async () => {
   const response = await getUserInfo();
   user.value = transformUserInfo(response);
+  if (user.value.Id) {
+    await getWalletBalance();
+    if (walletBalance.value === 0) {
+      await apiCreateWallet(user.value.Id);
+      await getWalletBalance();
+    }
+  } else {
+    console.error("User ID is undefined");
+  }
 });
 </script>
