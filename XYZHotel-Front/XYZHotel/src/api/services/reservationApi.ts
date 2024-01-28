@@ -1,5 +1,5 @@
 import axios from "axios";
-import { Reservation } from "../models";
+import { Reservation, ReservationStatus } from "../models";
 
 const api = axios.create({
   baseURL: "https://localhost:7057",
@@ -10,18 +10,19 @@ export const getReservations = async (): Promise<Reservation[]> => {
   return response.data;
 };
 
-export const createReservation = async (
-  newReservation: Reservation,
-): Promise<Reservation> => {
-  const response = await api.post<Reservation>("/CreateReservation", newReservation);
+export const getReservation = async (id: string): Promise<Reservation> => {
+  const response = await api.get<Reservation>(`/GetReservation/${id}`);
   return response.data;
 };
 
-export const updateReservation = async (
-  id: string,
-  updatedReservation: Reservation,
-): Promise<void> => {
-  await api.put(`/UpdateReservation/${id}`, updatedReservation);
+export const createReservation = async (reservation: Reservation): Promise<Reservation> => {
+  const response = await api.post<Reservation>("/CreateReservation", reservation);
+  return response.data;
+};
+
+export const updateReservationStatus = async (id: string, newStatus: ReservationStatus): Promise<Reservation> => {
+  const response = await api.put<Reservation>(`/UpdateReservationStatus/${id}`, { status: newStatus });
+  return response.data;
 };
 
 export const deleteReservation = async (id: string): Promise<void> => {

@@ -1,2 +1,2 @@
-Id,PhoneNumber,Room,CheckInDate,CheckOutDate,NumberOfNights,Status
-1,0625822113,2,07/12/2023 13:34:53,08/12/2023 13:34:53,1,Confirmed,
+Id,FullName,PhoneNumber,Room,CheckInDate,CheckOutDate,NumberOfNights,Status
+3fa85f64-5717-4562-b3fc-2c963f66afa6,John Doe,1234567890,Standard,28/01/2024 20:36:53,28/01/2024 20:36:53,2,Pending,

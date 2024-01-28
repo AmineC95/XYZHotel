@@ -8,61 +8,77 @@
 
     <q-tab-panels v-model="tab" animated>
       <q-tab-panel name="reservations">
-        <q-card>
-          <q-card-section>
-            <div class="text-h6">Réservations actuelles</div>
-            <div v-if="room" class="text-subtitle1">
-              Chambre sélectionnée : {{ room.Type }}
-            </div>
-            <div v-if="room && room.PricePerNight" class="text-subtitle2">
-              Prix par nuit : {{ room.PricePerNight.Amount }} EUR
-            </div>
-            <div v-if="room && room.Infos" class="text-subtitle2">
-              Informations :
-              <ul>
-                <li v-for="(info, index) in room.Infos" :key="index">
-                  {{ info }}
-                </li>
-              </ul>
+        <q-card flat bordered class="q-pa-md">
+          <div class="text-h6 q-mb-md">Réservations actuelles</div>
+
+          <div class="row">
+            <div class="col-12 col-md-6">
+              <q-card-section class="q-pt-none">
+                <div v-if="room" class="text-subtitle1">
+                  Chambre sélectionnée : {{ room.Type }}
+                </div>
+                <div v-if="room && room.PricePerNight" class="text-subtitle2">
+                  Prix par nuit : {{ room.PricePerNight.Amount }} EUR
+                </div>
+                <div v-if="room && room.Infos" class="text-subtitle2">
+                  Informations :
+                  <ul>
+                    <li v-for="(info, index) in room.Infos" :key="index">
+                      {{ info }}
+                    </li>
+                  </ul>
+                </div>
+              </q-card-section>
             </div>
 
-            <!-- Ajout des nouveaux éléments -->
-            <q-date
-              v-model="dateRange"
-              range
-              label="Sélectionnez la plage de dates"
-              class="q-mt-md"
-            />
-            <q-input
-              v-model="numberOfRooms"
-              type="number"
-              min="1"
-              step="1"
-              label="Nombre de chambres"
-              class="q-mt-md"
-            />
-            <div class="text-subtitle2 q-mt-md">
-              Nombre de nuits : <span>{{ numberOfNights }}</span>
+            <div class="col-12 col-md-6">
+              <q-card-section>
+                <q-date
+                  v-model="dateRange"
+                  range
+                  label="Sélectionnez la plage de dates"
+                  class="q-mt-md full-width"
+                />
+                <q-input
+                  v-model="numberOfRooms"
+                  type="number"
+                  min="1"
+                  step="1"
+                  label="Nombre de chambres"
+                  class="q-mt-md full-width"
+                />
+                <div class="text-subtitle2 q-mt-md">
+                  Nombre de nuits : <span>{{ numberOfNights }}</span>
+                </div>
+                <div class="text-subtitle2">
+                  Montant total de la réservation :
+                  <span>{{ totalAmount }} EUR</span>
+                  <br />
+                  Votre portefeuille :
+                  <span
+                    >{{
+                      walletBalance.Balance ? walletBalance.Balance.Amount : 0
+                    }}
+                    EUR
+                  </span>
+                </div>
+                <q-btn
+                  label="Valider"
+                  icon="check_circle"
+                  type="button"
+                  color="primary"
+                  class="q-mt-md"
+                  :disabled="totalAmount === 0"
+                  @click="validateReservation"
+                />
+              </q-card-section>
             </div>
-            <div class="text-subtitle2 q-mt-md">
-              Montant total de la réservation :
-              <span>{{ totalAmount }} EUR</span>
-            </div>
-
-            <q-btn
-              label="Valider"
-              type="button"
-              color="primary"
-              class="q-mt-md"
-              :disabled="totalAmount === 0"
-              @click="validateReservation"
-            />
-          </q-card-section>
+          </div>
         </q-card>
       </q-tab-panel>
 
       <q-tab-panel name="userInfo">
-        <q-card>
+        <q-card flat bordered class="q-pa-md">
           <q-card-section>
             <div class="text-h6">
               Modifier les informations de l'utilisateur
@@ -85,7 +101,7 @@
       </q-tab-panel>
 
       <q-tab-panel name="wallet">
-        <q-card>
+        <q-card flat bordered class="q-pa-md">
           <q-card-section>
             <div class="text-h6">
               <q-icon name="account_balance_wallet" class="q-mr-sm" />
@@ -132,9 +148,15 @@ import {
   deleteCustomer,
   creditWallet as apiRechargeWallet,
   getWallet as apiGetWalletBalance,
-  createWallet as apiCreateWallet
+  createWallet as apiCreateWallet,
 } from "../../api/services/api";
 import { Customer, Currency, Room } from "../../api/models/index";
+import {
+  getReservation,
+  createReservation,
+  updateReservationStatus,
+  deleteReservation,
+} from "../../api/services/reservationApi";
 
 // Réactifs et états
 const user = ref<Customer>({
@@ -187,6 +209,44 @@ const transformUserInfo = (userInfo: any): Customer => ({
   PasswordHash: "",
   PhoneNumber: { Number: userInfo.PhoneNumber.Number },
 });
+
+const validateReservation = async () => {
+  if (!user.value.Id || !room.value) {
+    console.error("User ID or room is undefined");
+    return;
+  }
+
+  const reservation = {
+    Customer: {
+      Id: user.value.Id,
+      FullName: user.value.FullName,
+      Email: user.value.Email.Value,
+      PhoneNumber: {
+        Number: user.value.PhoneNumber.Number,
+      },
+      PasswordHash: user.value.PasswordHash,
+    },
+    Room: {
+      Id: room.value.Id,
+      Type: room.value.Type,
+      PricePerNight: room.value.PricePerNight.Amount,
+      Infos: Array.from(room.value.Infos),
+    },
+    CheckInDate: dateRange.value.from,
+    CheckOutDate: dateRange.value.to,
+    NumberOfNights: numberOfNights.value,
+    Status: "Pending",
+  };
+
+  try {
+    console.log("Creating reservation", reservation);
+    await createReservation(reservation);
+    console.log("Réservation créée avec succès", reservation);
+  } catch (error) {
+    console.error("Échec de la création de la réservation", error);
+  }
+};
+
 const getWalletBalance = async () => {
   if (!user.value.Id) {
     console.error("User ID is undefined");
@@ -229,9 +289,6 @@ const deleteUser = async () => {
   console.log("Deleting user", user.value.Id);
   await deleteCustomer(user.value.Id);
 };
-const validateReservation = () => {
-  console.log("Réservation validée");
-};
 
 // Gestion du cycle de vie
 onMounted(async () => {
@@ -248,7 +305,7 @@ onMounted(async () => {
       console.error("Failed to parse room data from localStorage", error);
     }
   } else {
-    console.log('No data in localStorage for key "room"');
+    console.log('No data for "room"');
   }
 
   if (user.value.Id) {
@@ -265,5 +322,10 @@ onMounted(async () => {
 <style>
 .q-tab-panels {
   margin-top: 20px;
+}
+
+.q-card-section .q-input,
+.q-card-section .q-date {
+  max-width: 300px;
 }
 </style>

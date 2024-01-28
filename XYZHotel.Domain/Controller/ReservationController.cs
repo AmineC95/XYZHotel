@@ -28,37 +28,49 @@ namespace XYZHotel.Api.Controllers
             return Ok(reservations);
         }
 
+        [HttpGet("/GetReservation/{reservationId}")]
+        public IActionResult GetReservation(Guid reservationId)
+        {
+            var reservations = ReadReservationsFromCsv();
+
+            var reservation = reservations.FirstOrDefault(r => r.Id == reservationId);
+
+            if (reservation == null)
+                return NotFound("No reservation found for the given reservation ID.");
+
+            return Ok(reservation);
+        }
+
         [HttpPost("/CreateReservation")]
         public IActionResult CreateReservation([FromBody] Reservation newReservation)
         {
             var reservations = ReadReservationsFromCsv();
 
-            newReservation.Id = new int();
+            newReservation.Id = (Guid)newReservation.Customer.Id;
             reservations.Add(newReservation);
             WriteReservationsToCsv(reservations);
 
             return CreatedAtAction(nameof(GetReservations), new { id = newReservation.Id }, newReservation);
         }
 
-        [HttpPut("/UpdateReservation/{id}")]
-        public IActionResult UpdateReservation(int id, [FromBody] Reservation updatedReservation)
+        [HttpPut("/UpdateReservationStatus/{reservationId}")]
+        public IActionResult UpdateReservationStatus(Guid reservationId, [FromBody] ReservationStatus newStatus)
         {
             var reservations = ReadReservationsFromCsv();
-            var reservationIndex = reservations.FindIndex(r => r.Id == id);
-            if (reservationIndex < 0)
+            var reservation = reservations.FirstOrDefault(r => r.Id == reservationId);
+            if (reservation == null)
                 return NotFound("Reservation not found.");
 
-            reservations[reservationIndex] = updatedReservation;
-
+            reservation.Status = newStatus;
             WriteReservationsToCsv(reservations);
-            return NoContent();
+            return Ok(reservation);
         }
 
-        [HttpDelete("/DeleteReservation/{id}")]
-        public IActionResult DeleteReservation(int id)
+        [HttpDelete("/DeleteReservation/{reservationId}")]
+        public IActionResult DeleteReservation(Guid reservationId)
         {
             var reservations = ReadReservationsFromCsv();
-            var reservation = reservations.FirstOrDefault(r => r.Id == id);
+            var reservation = reservations.FirstOrDefault(r => r.Id == reservationId);
             if (reservation == null)
                 return NotFound("Reservation not found.");
 
@@ -79,18 +91,18 @@ namespace XYZHotel.Api.Controllers
             foreach (var line in lines.Skip(1))
             {
                 var values = line.Split(',');
-                if (int.TryParse(values[0], out var id))
+                if (Guid.TryParse(values[0], out var id))
                 {
-                    DateTime.TryParse(values[3], out var checkInDate);
-                    DateTime.TryParse(values[4], out var checkOutDate);
-                    int.TryParse(values[5], out var numberOfNights);
-                    Enum.TryParse(values[6], out ReservationStatus status);
-                    Enum.TryParse(values[2], out RoomType roomType);
+                    DateTime.TryParse(values[4], out var checkInDate);
+                    DateTime.TryParse(values[5], out var checkOutDate);
+                    int.TryParse(values[6], out var numberOfNights);
+                    Enum.TryParse(values[7], out ReservationStatus status);
+                    Enum.TryParse(values[3], out RoomType roomType);
 
                     var reservation = new Reservation
                     {
                         Id = id,
-                        Customer = new Customer { PhoneNumber = new PhonesNumber(values[1]) },
+                        Customer = new Customer { FullName = values[1], PhoneNumber = new PhonesNumber(values[2]) },
                         Room = new Room { Type = roomType },
                         CheckInDate = checkInDate,
                         CheckOutDate = checkOutDate,
@@ -106,11 +118,13 @@ namespace XYZHotel.Api.Controllers
 
         private void WriteReservationsToCsv(List<Reservation> reservations)
         {
-            var lines = new List<string> { "Id,PhoneNumber,Room,CheckInDate,CheckOutDate,NumberOfNights,Status" };
+            var lines = new List<string> { "Id,FullName,PhoneNumber,Room,CheckInDate,CheckOutDate,NumberOfNights,Status" };
             lines.AddRange(reservations.Select(reservation =>
                 $"{reservation.Id}," +
-                $"{reservation.Customer?.PhoneNumber.Number}," +
-                $"{reservation.Room?.Type},{reservation.CheckInDate}," +
+                $"{(reservation.Customer != null ? reservation.Customer.FullName : string.Empty)}," +
+                $"{(reservation.Customer != null && reservation.Customer.PhoneNumber != null ? reservation.Customer.PhoneNumber.Number : string.Empty)}," +
+                $"{(reservation.Room != null ? reservation.Room.Type : string.Empty)}," +
+                $"{reservation.CheckInDate}," +
                 $"{reservation.CheckOutDate},{reservation.NumberOfNights}," +
                 $"{reservation.Status},"
                 ));
